@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>СИСТЕМА ЗАРАЖЕНА</title>
+<style>
+  body {
+    margin: 0; padding: 0; background-color: #000; color: #ff0000;
+    font-family: 'Courier New', Courier, monospace; height: 100vh;
+    overflow: hidden; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+  }
+  .skull { font-size: 120px; margin-bottom: 20px; animation: pulse 1s infinite alternate; }
+  .warning { font-size: 24px; font-weight: bold; margin-bottom: 20px; animation: blink 0.8s infinite; }
+  .timer { font-size: 70px; font-weight: bold; color: #fff; text-shadow: 0 0 20px red; margin-bottom: 40px; }
+  button {
+    background-color: #ff0000; color: white; border: none; padding: 15px 40px;
+    font-size: 20px; font-weight: bold; cursor: pointer; border-radius: 5px; box-shadow: 0 0 20px red;
+  }
+  button:active { background-color: #990000; }
+  #final-screen {
+    display: none; flex-direction: column; align-items: center;
+    justify-content: center; width: 100%; height: 100%;
+  }
+  .final-text {
+    font-size: 40px; color: #00ff00; font-weight: bold; text-shadow: 0 0 20px #00ff00;
+    animation: shake 0.1s infinite;
+  }
+  @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+  @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+</style>
+</head>
+<body>
+
+  <div id="main-screen">
+    <div class="skull">💀</div>
+    <div class="warning">⚠️ ЗАКАЧИВАНИЕ ВИРУСА ТРОЯН ⚠️</div>
+    <div class="timer" id="timer">30</div>
+    <button id="cancel-btn">ОТМЕНИТЬ</button>
+  </div>
+
+  <div id="final-screen">
+    <div class="skull" style="color:#00ff00; text-shadow: 0 0 30px #00ff00;">💀</div>
+    <div class="final-text">ТРОЯН СКАЧАН!</div>
+  </div>
+
+  <audio id="train-sound" src="train.mp3" preload="auto"></audio>
+
+  <script>
+    let time = 30;
+    let started = false;
+    const timerElement = document.getElementById('timer');
+    const btn = document.getElementById('cancel-btn');
+    const audio = document.getElementById('train-sound');
+    const mainScreen = document.getElementById('main-screen');
+    const finalScreen = document.getElementById('final-screen');
+
+    const countdown = setInterval(() => {
+      time--;
+      timerElement.innerText = time;
+      if (time <= 0) {
+        clearInterval(countdown);
+        timerElement.innerText = "0";
+        startScare();
+      }
+    }, 1000);
+
+    btn.addEventListener('click', () => {
+      clearInterval(countdown);
+      startScare();
+    });
+
+    function startScare() {
+      if (started) return;
+      started = true;
+      audio.volume = 1.0;
+      audio.play();
+      if (navigator.vibrate) {
+        navigator.vibrate([1000, 200, 1000, 200, 1000, 200, 2000]);
+      }
+      setTimeout(() => {
+        mainScreen.style.display = 'none';
+        finalScreen.style.display = 'flex';
+      }, 1000);
+    }
+  </script>
+
+</body>
+</html>
